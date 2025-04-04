@@ -1,0 +1,22 @@
+# Don't copy local node_modules — we'll npm install clean inside the container
+node_modules
+
+# Don't copy compiled output (if you later do npm run build)
+dist
+
+# Don't copy build/config files not needed inside container
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Don't copy environment variables (security reasons)
+.env
+
+# Don't copy npm debug logs if they exist
+npm-debug.log
+
+# ignore system-specific or editor files
+*.log
+*.DS_Store
+.vscode/
+.idea/
