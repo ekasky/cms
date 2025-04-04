@@ -16,11 +16,16 @@ const startServer = async (): Promise<void> => {
     // Creates a new Express.js application instance.
     const app = express();
 
-    // Connect to redis db
-    await connectRedis();
 
+    // Connect to redis db
     // Connect to postgreSQL db
-    await connectDatabase();
+    await Promise.all([
+        connectRedis(),
+        connectDatabase()
+    ]);
+
+    // Build rate limiter after Redis is ready
+    const globalRateLimiter = createGlobalRateLimiter();
 
     // Middleware to log all incoming http requests
     // every incoming request (GET, POST, etc.) will be logged automatically!
@@ -39,7 +44,6 @@ const startServer = async (): Promise<void> => {
 
     // This applies a global express-rate-limiter for 100 requests per IP per 15 minutes.
     // This applies to all routes, can be overidden if a smaller or larger number is needed.
-    const globalRateLimiter = createGlobalRateLimiter();
     app.use(globalRateLimiter);
 
     // Middleware to parse incoming JSON requests.
