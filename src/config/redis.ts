@@ -18,6 +18,7 @@ export const connectRedis = async () => {
       logger.info('Connected to Redis');
     } catch (error) {
       logger.error(`Failed to connect to Redis: ${error}`);
+      throw error;
     }
   };
   

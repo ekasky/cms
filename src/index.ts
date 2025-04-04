@@ -9,6 +9,7 @@ import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import { createGlobalRateLimiter } from './middlewares/globalRateLimiter';
 import { connectRedis } from './config/redis';
+import { connectDatabase } from './config/database';
 
 const startServer = async (): Promise<void> => {
 
@@ -17,6 +18,9 @@ const startServer = async (): Promise<void> => {
 
     // Connect to redis db
     await connectRedis();
+
+    // Connect to postgreSQL db
+    await connectDatabase();
 
     // Middleware to log all incoming http requests
     // every incoming request (GET, POST, etc.) will be logged automatically!
