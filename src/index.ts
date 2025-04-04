@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
-import PinoHttp, { pinoHttp } from 'pino-http';
+import { pinoHttp } from 'pino-http';
 import helmet from 'helmet';
 import cors from 'cors';
+import compression from 'compression';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 
@@ -21,6 +22,10 @@ const startServer = async (): Promise<void> => {
 
     // This allows the application to accept requests from different origins (e.g., a frontend app running on a different domain or port).
     app.use(cors()); // Allow all origins by default.
+
+    // This reduces the size of the response body, improving performance by decreasing the amount of data transferred.
+    // It uses gzip or deflate compression, depending on the client's capabilities.
+    app.use(compression());
 
     // Middleware to parse incoming JSON requests.
     // This allows the application to handle JSON data sent in the request body.
