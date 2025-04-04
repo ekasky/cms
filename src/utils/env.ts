@@ -63,3 +63,17 @@ export const getEnvAsBoolean = (key: string, required = true): boolean => {
     throw new Error(`Environment variable "${key}" must be a boolean(true/false or 1/0). Got "${raw}"`);
 
 };
+
+export const getEnvAsEnum = <T extends string>(key: string, allowed: readonly T[], required = true): T => {
+
+    // Read in the value as a string
+    const raw: string = getEnv(key, required);
+
+    // The the string is not in the allow list of the enum throw an error
+    if(!allowed.includes(raw as T)) {
+        throw new Error(`Environment variable "${key}" must be one of: "${allowed.join(', ')}". Got ${raw}`);
+    }
+
+    return raw as T;
+
+};
