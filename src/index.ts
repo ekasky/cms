@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import PinoHttp, { pinoHttp } from 'pino-http';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 
@@ -7,6 +8,10 @@ const startServer = async (): Promise<void> => {
 
     // Creates a new Express.js application instance.
     const app = express();
+
+    // Middleware to log all incoming http requests
+    // every incoming request (GET, POST, etc.) will be logged automatically!
+    app.use(pinoHttp({ logger }));
 
     // Middleware to parse incoming JSON requests.
     // This allows the application to handle JSON data sent in the request body.
