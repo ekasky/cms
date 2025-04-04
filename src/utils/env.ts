@@ -44,3 +44,22 @@ export const getEnvAsInteger = (key: string, required = true): number => {
     return value;
 
 };
+
+export const getEnvAsBoolean = (key: string, required = true): boolean => {
+
+    // Read in the value and normalize the data
+    const raw: string = getEnv(key, required).toLowerCase();
+
+    // If the value is true or 1 return true
+    if(raw === 'true' || raw === '1') {
+        return true;
+    }
+
+    // If the value is false or 0 return false
+    if(raw === 'false' || raw === '0') {
+        return false;
+    }
+
+    throw new Error(`Environment variable "${key}" must be a boolean(true/false or 1/0). Got "${raw}"`);
+
+};
