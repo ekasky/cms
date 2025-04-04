@@ -12,6 +12,7 @@ import { createGlobalRateLimiter } from './middlewares/globalRateLimiter';
 import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/database';
 import { shutdown } from './utils/shutdown';
+import { connectPrisma } from './config/prisma';
 
 const startServer = async (): Promise<void> => {
 
@@ -23,7 +24,8 @@ const startServer = async (): Promise<void> => {
     // Connect to postgreSQL db
     await Promise.all([
         connectRedis(),
-        connectDatabase()
+        //connectDatabase(),                    // No longer needed as prisma ORM will handle db interactions
+        connectPrisma()
     ]);
 
     // Build rate limiter after Redis is ready
