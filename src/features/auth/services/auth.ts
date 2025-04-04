@@ -41,16 +41,24 @@ export const registerUser = async (data: RegisterDto) => {
 
     // === 3. Save the new user to the Users table in the database ===
 
-    const newUser = await prisma.user.create({
-        data: {
-            username,
-            email,
-            password: hashedPassword,
-            first_name,
-            last_name,
-            provider: AuthProvider.LOCAL
-        }
-    });
+    let newUser;
+
+    try {
+
+        newUser = await prisma.user.create({
+            data: {
+                username,
+                email,
+                password: hashedPassword,
+                first_name,
+                last_name,
+                provider: AuthProvider.LOCAL
+            }
+        });
+
+    } catch(error) {
+        throw new ApiError(500, 'Failed to create user. Please try again.');
+    }
 
     // === 4. (DO LATER): Send a inital acocunt verification email ===
 
