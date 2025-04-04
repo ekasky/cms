@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import PinoHttp, { pinoHttp } from 'pino-http';
 import helmet from 'helmet';
+import cors from 'cors';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 
@@ -17,6 +18,9 @@ const startServer = async (): Promise<void> => {
     // Applies security-related HTTP headers to protect the application from common web vulnerabilities.
     // This middleware helps prevent XSS, clickjacking, and other security risks by setting appropriate headers.
     app.use(helmet());
+
+    // This allows the application to accept requests from different origins (e.g., a frontend app running on a different domain or port).
+    app.use(cors()); // Allow all origins by default.
 
     // Middleware to parse incoming JSON requests.
     // This allows the application to handle JSON data sent in the request body.
