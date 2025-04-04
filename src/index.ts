@@ -7,12 +7,16 @@ import compression from 'compression';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
-import { globalRateLimiter } from './middlewares/globalRateLimiter';
+import { createGlobalRateLimiter } from './middlewares/globalRateLimiter';
+import { connectRedis } from './config/redis';
 
 const startServer = async (): Promise<void> => {
 
     // Creates a new Express.js application instance.
     const app = express();
+
+    // Connect to redis db
+    await connectRedis();
 
     // Middleware to log all incoming http requests
     // every incoming request (GET, POST, etc.) will be logged automatically!
@@ -31,6 +35,7 @@ const startServer = async (): Promise<void> => {
 
     // This applies a global express-rate-limiter for 100 requests per IP per 15 minutes.
     // This applies to all routes, can be overidden if a smaller or larger number is needed.
+    const globalRateLimiter = createGlobalRateLimiter();
     app.use(globalRateLimiter);
 
     // Middleware to parse incoming JSON requests.
