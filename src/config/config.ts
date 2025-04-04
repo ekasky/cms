@@ -12,6 +12,10 @@ export const DB_PASSWORD: string = getEnv('DB_PASSWORD');
 export const DB_DATABASE: string = getEnv('DB_DATABASE');
 export const DB_HOST: string = getEnv('DB_HOST');
 export const DB_PORT: number = getEnvAsInteger('DB_PORT');
+export const JWT_ACCESS_TOKEN_SECRET: string = getEnv('JWT_ACCESS_TOKEN_SECRET');
+export const JWT_REFRESH_TOKEN_SECRET: string = getEnv('JWT_REFRESH_TOKEN_SECRET');
+export const ACCESS_TOKEN_EXPIRES_IN: string = getEnv('ACCESS_TOKEN_EXPIRES_IN');
+export const REFRESH_TOKEN_EXPIRES_IN: string = getEnv('REFRESH_TOKEN_EXPIRES_IN');
 
 export const env = { 
     NODE_ENV, 
@@ -24,6 +28,12 @@ export const env = {
         DB_DATABASE, 
         DB_HOST, 
         DB_PORT 
-    } 
+    },
+    JWT: {
+        JWT_ACCESS_TOKEN_SECRET,
+        JWT_REFRESH_TOKEN_SECRET,
+        ACCESS_TOKEN_EXPIRES_IN,
+        REFRESH_TOKEN_EXPIRES_IN
+    }
 };
 
