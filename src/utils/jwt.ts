@@ -15,3 +15,16 @@ export const signToken = (payload: object, key: TokenKey, options?: SignOptions)
 
     return jwt.sign(payload, tokenSecret, signOptions);
 };
+
+export const verifyToken = <T>(token: string, key: TokenKey): T | null => {
+
+    try {
+
+        const tokenSecret: string = key === 'access' ? JWT_ACCESS_TOKEN_SECRET : JWT_REFRESH_TOKEN_SECRET;
+        return jwt.verify(token, tokenSecret) as T;
+
+    } catch(error) {
+        return null;
+    }
+
+};
