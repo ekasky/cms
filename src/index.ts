@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
@@ -58,6 +58,15 @@ const startServer = async (): Promise<void> => {
     // 'extended: true' allows parsing of rich objects and arrays encoded in the URL-encoded format.
     // This is necessary for handling form submissions and other URL-encoded data.
     app.use(express.urlencoded({ extended: true }));
+
+    // Health check route
+    // Responds with a 200 OK code and a message "healthy" if the server is running properly
+    app.get('/health-check', (req: Request, res: Response) => {
+        res.status(200).json({
+            success: true,
+            message: 'healthy',
+        });
+    });
 
     // Define API routers here
 
