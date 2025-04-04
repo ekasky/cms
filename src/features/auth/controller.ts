@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 
 
-export const testController = (req: Request, res: Response) => {
+export const registerUserController = async (req: Request, res: Response) => {
 
-    res.send('Test');
+    try {
+
+    } catch(error) {
+        
+    }
 
 };

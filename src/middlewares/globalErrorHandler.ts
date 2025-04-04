@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '../utils/logger';
-import { ApiError } from '../utils/ApiError';
+import { ApiError, FieldConflictError } from '../utils/ApiError';
 
 export const globalErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
 
@@ -8,8 +8,18 @@ export const globalErrorHandler = (err: Error, req: Request, res: Response, next
     // This info will not be sent to the client
     logger.error(err);
 
-    // Handle all ApiError responses here
-    if(err instanceof ApiError) {
+    // Handle any FieldConflict errors here
+    if(err instanceof FieldConflictError) {
+
+        res.status(err.statusCode).json({
+            success: false,
+            message: err.message,
+            fields: err.fields
+        });
+
+    }
+    // Handle all generic ApiError responses here
+    else if(err instanceof ApiError) {
 
         res.status(err.statusCode).json({
             success: false,

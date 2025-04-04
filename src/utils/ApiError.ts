@@ -15,3 +15,18 @@ export class ApiError extends Error {
     }
 
 }
+
+export class FieldConflictError extends ApiError {
+
+    fields: string[];
+
+    constructor(fields: string[]) {
+        
+        super(409, 'Some fields are already taken.');
+        this.fields = fields;
+
+        // Maintain proper prototype chain
+        Object.setPrototypeOf(this, new.target.prototype);
+    }
+
+}
