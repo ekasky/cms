@@ -30,3 +30,17 @@ export const getEnvAsNumber = (key: string, required = true): number => {
     return value;
 
 };
+
+export const getEnvAsInteger = (key: string, required = true): number => {
+
+    // Get the variable as a number
+    const value: number = getEnvAsNumber(key, required);
+
+    // Check to see if the number is a integer
+    if(!Number.isInteger(value)) {
+        throw new Error(`Environment variable "${key}" must be a integer. Got "${value}"`);
+    }
+
+    return value;
+
+};
