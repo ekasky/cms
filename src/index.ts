@@ -6,6 +6,7 @@ import cors from 'cors';
 import compression from 'compression';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 const startServer = async (): Promise<void> => {
 
@@ -35,6 +36,12 @@ const startServer = async (): Promise<void> => {
     // 'extended: true' allows parsing of rich objects and arrays encoded in the URL-encoded format.
     // This is necessary for handling form submissions and other URL-encoded data.
     app.use(express.urlencoded({ extended: true }));
+
+    // Define API routers here
+
+    // Global error handler
+    // Catches all uncaught errors and sends a uniform and clean response
+    app.use(globalErrorHandler);
     
     // Starts the Express.js server and listens for incoming requests on the specified PORT.
     app.listen(PORT, () => {
