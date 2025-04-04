@@ -1,5 +1,7 @@
+import argon2 from 'argon2';
 import { prisma } from '../../../config/prisma';
 import { ApiError, FieldConflictError } from '../../../utils/ApiError';
+import { logger } from '../../../utils/logger';
 
 interface RegisterDto {
     username: string;
@@ -29,6 +31,13 @@ export const registerUser = async (data: RegisterDto) => {
     }
     
     // === 2. Hash the password for safe database storage ===
+    let hashedPassword: string;
+    
+    try {
+        hashedPassword = await argon2.hash(password);
+    } catch(error) {
+        throw new ApiError(500, 'Something went wrong. Please try again.');
+    }
 
     // === 3. Save the new user to the Users table in the database ===
 
