@@ -1,4 +1,5 @@
 import { getEnv, getEnvAsEnum, getEnvAsInteger } from '../utils/env';
+import { StringValue } from 'ms';
 
 type NodeEnv = 'development' | 'production' | 'test';
 
@@ -14,8 +15,8 @@ export const DB_HOST: string = getEnv('DB_HOST');
 export const DB_PORT: number = getEnvAsInteger('DB_PORT');
 export const JWT_ACCESS_TOKEN_SECRET: string = getEnv('JWT_ACCESS_TOKEN_SECRET');
 export const JWT_REFRESH_TOKEN_SECRET: string = getEnv('JWT_REFRESH_TOKEN_SECRET');
-export const ACCESS_TOKEN_EXPIRES_IN: string = getEnv('ACCESS_TOKEN_EXPIRES_IN');
-export const REFRESH_TOKEN_EXPIRES_IN: string = getEnv('REFRESH_TOKEN_EXPIRES_IN');
+export const ACCESS_TOKEN_EXPIRES_IN: StringValue = getEnv('ACCESS_TOKEN_EXPIRES_IN') as StringValue;
+export const REFRESH_TOKEN_EXPIRES_IN: StringValue = getEnv('REFRESH_TOKEN_EXPIRES_IN') as StringValue;
 
 export const env = { 
     NODE_ENV, 
