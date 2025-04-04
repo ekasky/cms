@@ -32,6 +32,7 @@ model User {
   username           String?       @unique
   email              String        @unique
   password           String?       // Nullable for OAuth users
+  provider           AuthProvider  @default(LOCAL)
   provider_id        String?
   is_email_verified  Boolean        @default(false)
   first_name         String

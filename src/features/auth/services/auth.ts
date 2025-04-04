@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 import { prisma } from '../../../config/prisma';
 import { ApiError, FieldConflictError } from '../../../utils/ApiError';
-import { logger } from '../../../utils/logger';
+import { AuthProvider } from '@prisma/client';
 
 interface RegisterDto {
     username: string;
@@ -41,8 +41,31 @@ export const registerUser = async (data: RegisterDto) => {
 
     // === 3. Save the new user to the Users table in the database ===
 
+    const newUser = await prisma.user.create({
+        data: {
+            username,
+            email,
+            password: hashedPassword,
+            first_name,
+            last_name,
+            provider: AuthProvider.LOCAL
+        }
+    });
+
     // === 4. (DO LATER): Send a inital acocunt verification email ===
 
     // === 5. Return a success message if registered successfully ===
+    return {
+        success: true,
+        message: 'User registered successfully',
+        user: {
+            id: newUser.id,
+            email: newUser.email,
+            username: newUser.username,
+            first_name: newUser.first_name,
+            last_name: newUser.last_name,
+            created_at: newUser.created_at
+        }
+    }
 
 };
