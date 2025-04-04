@@ -5,6 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import { Server } from 'http';
 import { pinoHttp } from 'pino-http';
+import authRouter from './features/auth/router';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
@@ -69,6 +70,7 @@ const startServer = async (): Promise<void> => {
     });
 
     // Define API routers here
+    app.use('/api/auth', authRouter);
 
     // Global error handler
     // Catches all uncaught errors and sends a uniform and clean response
