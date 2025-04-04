@@ -13,7 +13,9 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
