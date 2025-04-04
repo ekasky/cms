@@ -1,15 +1,17 @@
 import 'dotenv/config';
 import express from 'express';
-import { pinoHttp } from 'pino-http';
 import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
+import { Server } from 'http';
+import { pinoHttp } from 'pino-http';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import { createGlobalRateLimiter } from './middlewares/globalRateLimiter';
 import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/database';
+import { shutdown } from './utils/shutdown';
 
 const startServer = async (): Promise<void> => {
 
@@ -62,11 +64,15 @@ const startServer = async (): Promise<void> => {
     app.use(globalErrorHandler);
     
     // Starts the Express.js server and listens for incoming requests on the specified PORT.
-    app.listen(PORT, () => {
+    const server: Server = app.listen(PORT, () => {
     
         logger.info(`Server is running at http://localhost:${PORT}`);
 
     });
+
+    // Gracefully shutdown the server on shutdown signals
+    process.on('SIGINT', async () => await shutdown(server));
+    process.on('SIGTERM', async () => await shutdown(server));
 
 };
 
