@@ -7,6 +7,7 @@ import compression from 'compression';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
+import { globalRateLimiter } from './middlewares/globalRateLimiter';
 
 const startServer = async (): Promise<void> => {
 
@@ -27,6 +28,10 @@ const startServer = async (): Promise<void> => {
     // This reduces the size of the response body, improving performance by decreasing the amount of data transferred.
     // It uses gzip or deflate compression, depending on the client's capabilities.
     app.use(compression());
+
+    // This applies a global express-rate-limiter for 100 requests per IP per 15 minutes.
+    // This applies to all routes, can be overidden if a smaller or larger number is needed.
+    app.use(globalRateLimiter);
 
     // Middleware to parse incoming JSON requests.
     // This allows the application to handle JSON data sent in the request body.
