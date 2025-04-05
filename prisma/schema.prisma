@@ -21,9 +21,9 @@ enum AuthProvider {
 }
 
 enum TwoFactorType {
-  TOTP        // Authenticator app like Google Authenticator
-  SMS         // Phone SMS
-  EMAIL       // Email code
+  TOTP // Authenticator app like Google Authenticator
+  SMS // Phone SMS
+  EMAIL // Email code
 }
 
 enum EmailVerificationStatus {
@@ -32,12 +32,11 @@ enum EmailVerificationStatus {
   FAILED
 }
 
-
 model User {
   id                        String                  @id @default(uuid())
   username                  String?                 @unique
   email                     String                  @unique
-  password                  String?       // Nullable for OAuth users
+  password                  String? // Nullable for OAuth users
   provider                  AuthProvider            @default(LOCAL)
   provider_id               String?
   is_email_verified         Boolean                 @default(false)
@@ -49,21 +48,33 @@ model User {
 
   // Relationships
   twoFactorMethods   TwoFactorMethod[]
-
+  verificationTokens VerificationToken[]
 }
 
 model TwoFactorMethod {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   userId      String
   type        TwoFactorType
-  secret      String?      // For TOTP or WebAuthn
-  phoneNumber String?      // For SMS 2FA
-  email       String?      // For Email-based codes
-  createdAt   DateTime @default(now())
+  secret      String? // For TOTP or WebAuthn
+  phoneNumber String? // For SMS 2FA
+  email       String? // For Email-based codes
+  createdAt   DateTime      @default(now())
 
   // Relationships
-  user        User     @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
   @@index([userId])
 }
 
+model VerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relationships
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
