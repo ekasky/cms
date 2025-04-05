@@ -2,9 +2,14 @@ import { Router } from 'express';
 import { registerUserController } from './controller';
 import { validate } from '../../middlewares/validate';
 import { registerUserSchema } from './validators';
+import { rateLimit } from 'express-rate-limit'; // Type import
 
-const router: Router = Router();
+export const createAuthRouter = (registerRateLimiter: ReturnType<typeof rateLimit>) => {
 
-router.post('/register', validate(registerUserSchema), registerUserController);
+  const router: Router = Router();
 
-export default router;
+  router.post('/register', registerRateLimiter, validate(registerUserSchema), registerUserController);
+
+  return router;
+  
+};

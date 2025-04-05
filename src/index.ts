@@ -5,7 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import { Server } from 'http';
 import { pinoHttp } from 'pino-http';
-import authRouter from './features/auth/router';
+import { createAuthRouter } from './features/auth/router';
 import { PORT } from './config/config';
 import { logger } from './utils/logger';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
@@ -14,6 +14,7 @@ import { connectRedis } from './config/redis';
 import { connectDatabase } from './config/database';
 import { shutdown } from './utils/shutdown';
 import { connectPrisma } from './config/prisma';
+import { createRegisterLimiter } from './features/auth/middlewares/registerLimiter';
 
 const startServer = async (): Promise<void> => {
 
@@ -31,6 +32,7 @@ const startServer = async (): Promise<void> => {
 
     // Build rate limiter after Redis is ready
     const globalRateLimiter = createGlobalRateLimiter();
+    const registerRateLimiter = createRegisterLimiter();
 
     // Middleware to log all incoming http requests
     // every incoming request (GET, POST, etc.) will be logged automatically!
@@ -70,7 +72,7 @@ const startServer = async (): Promise<void> => {
     });
 
     // Define API routers here
-    app.use('/api/auth', authRouter);
+    app.use('/api/auth', createAuthRouter(registerRateLimiter));
 
     // Global error handler
     // Catches all uncaught errors and sends a uniform and clean response
