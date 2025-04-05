@@ -3,6 +3,7 @@ import { prisma } from '../../../config/prisma';
 import { ApiError, FieldConflictError } from '../../../utils/ApiError';
 import { AuthProvider } from '@prisma/client';
 import { RegisterDto } from '../validators';
+import { pwnedPassword } from 'hibp';
 
 export const registerUser = async (data: RegisterDto) => {
 
@@ -22,8 +23,15 @@ export const registerUser = async (data: RegisterDto) => {
     } else if (existingEmail) {
         throw new FieldConflictError(['email']);
     }
+
+    // === 2. Check if the password is a known compromised password ===
+    const pwndCount: number = await pwnedPassword(password);
+
+    if(pwndCount > 0) {
+        throw new ApiError(400, 'This password has been exposed in previous data breaches. Please choose a diffrent password.');
+    }
     
-    // === 2. Hash the password for safe database storage ===
+    // === 3. Hash the password for safe database storage ===
     let hashedPassword: string;
     
     try {
@@ -32,7 +40,7 @@ export const registerUser = async (data: RegisterDto) => {
         throw new ApiError(500, 'Something went wrong. Please try again.');
     }
 
-    // === 3. Save the new user to the Users table in the database ===
+    // === 4. Save the new user to the Users table in the database ===
 
     let newUser;
 
@@ -53,9 +61,9 @@ export const registerUser = async (data: RegisterDto) => {
         throw new ApiError(500, 'Failed to create user. Please try again.');
     }
 
-    // === 4. (DO LATER): Send a inital acocunt verification email ===
+    // === 5. (DO LATER): Send a inital acocunt verification email ===
 
-    // === 5. Return a success message if registered successfully ===
+    // === 6. Return a success message if registered successfully ===
     return {
         success: true,
         message: 'User registered successfully',
