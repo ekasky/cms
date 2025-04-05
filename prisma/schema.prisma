@@ -26,19 +26,26 @@ enum TwoFactorType {
   EMAIL       // Email code
 }
 
+enum EmailVerificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 
 model User {
-  id                 String        @id @default(uuid())
-  username           String?       @unique
-  email              String        @unique
-  password           String?       // Nullable for OAuth users
-  provider           AuthProvider  @default(LOCAL)
-  provider_id        String?
-  is_email_verified  Boolean        @default(false)
-  first_name         String
-  last_name          String
-  created_at         DateTime       @default(now())
-  updated_at         DateTime       @updatedAt
+  id                        String                  @id @default(uuid())
+  username                  String?                 @unique
+  email                     String                  @unique
+  password                  String?       // Nullable for OAuth users
+  provider                  AuthProvider            @default(LOCAL)
+  provider_id               String?
+  is_email_verified         Boolean                 @default(false)
+  email_verification_status EmailVerificationStatus @default(PENDING)
+  first_name                String
+  last_name                 String
+  created_at                DateTime                @default(now())
+  updated_at                DateTime                @updatedAt
 
   // Relationships
   twoFactorMethods   TwoFactorMethod[]
