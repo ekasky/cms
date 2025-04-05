@@ -2,6 +2,7 @@ import { getEnv, getEnvAsEnum, getEnvAsInteger } from '../utils/env';
 import { StringValue } from 'ms';
 
 type NodeEnv = 'development' | 'production' | 'test';
+type EmailProvier = 'RESEND';
 
 // Safely parse the environment variables to their correct types and ensure they are loaded
 export const NODE_ENV: NodeEnv = getEnvAsEnum('NODE_ENV', ['development', 'production', 'test']);
@@ -17,6 +18,8 @@ export const JWT_ACCESS_TOKEN_SECRET: string = getEnv('JWT_ACCESS_TOKEN_SECRET')
 export const JWT_REFRESH_TOKEN_SECRET: string = getEnv('JWT_REFRESH_TOKEN_SECRET');
 export const ACCESS_TOKEN_EXPIRES_IN: StringValue = getEnv('ACCESS_TOKEN_EXPIRES_IN') as StringValue;
 export const REFRESH_TOKEN_EXPIRES_IN: StringValue = getEnv('REFRESH_TOKEN_EXPIRES_IN') as StringValue;
+export const EMAIL_PROVIDER: EmailProvier = getEnvAsEnum('EMAIL_PROVIDER', ['RESEND']); 
+export const RESEND_API_KEY: string = getEnv('RESEND_API_KEY');
 
 export const env = { 
     NODE_ENV, 
@@ -35,6 +38,10 @@ export const env = {
         JWT_REFRESH_TOKEN_SECRET,
         ACCESS_TOKEN_EXPIRES_IN,
         REFRESH_TOKEN_EXPIRES_IN
+    },
+    EMAIL: {
+        EMAIL_PROVIDER,
+        RESEND_API_KEY
     }
 };
 
