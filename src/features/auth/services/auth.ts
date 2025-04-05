@@ -54,7 +54,8 @@ export const registerUser = async (data: RegisterDto) => {
                 password: hashedPassword,
                 first_name,
                 last_name,
-                provider: AuthProvider.LOCAL
+                provider: AuthProvider.LOCAL,
+                email_verification_status: 'PENDING'
             }
         });
 
@@ -68,9 +69,24 @@ export const registerUser = async (data: RegisterDto) => {
         await(sendAccountVerificationEmail({
             to: newUser.email,
             verificationLink: 'https://yourdomain.com/verify-email?token=12345' // Placeholder will replace with real link
-        }))
+        }));
+
+        // If successful, update the status to SENT
+        await prisma.user.update({
+            where: { id: newUser.id },
+            data: { email_verification_status: 'SENT' }
+        });
+
     } catch(error) {
+
+        // If sending failed, update the status to FAILED
+        await prisma.user.update({
+            where: { id: newUser.id },
+            data: { email_verification_status: 'FAILED' }
+        });
+
         throw new ApiError(400, 'There was a problem sending the verification email. Please try again shortly.');
+        
     }
 
     // === 6. Return a success message if registered successfully ===
