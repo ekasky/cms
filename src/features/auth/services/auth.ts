@@ -4,6 +4,7 @@ import { ApiError, FieldConflictError } from '../../../utils/ApiError';
 import { AuthProvider } from '@prisma/client';
 import { RegisterDto } from '../validators';
 import { pwnedPassword } from 'hibp';
+import { sendAccountVerificationEmail } from './email';
 
 export const registerUser = async (data: RegisterDto) => {
 
@@ -61,7 +62,16 @@ export const registerUser = async (data: RegisterDto) => {
         throw new ApiError(500, 'Failed to create user. Please try again.');
     }
 
-    // === 5. (DO LATER): Send a inital acocunt verification email ===
+    // === 5. Send a inital acocunt verification email ===
+
+    try {
+        await(sendAccountVerificationEmail({
+            to: newUser.email,
+            verificationLink: 'https://yourdomain.com/verify-email?token=12345' // Placeholder will replace with real link
+        }))
+    } catch(error) {
+
+    }
 
     // === 6. Return a success message if registered successfully ===
     return {

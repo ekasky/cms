@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { RESEND_API_KEY } from '../config/config';
 
 export enum EmailProvider {
-    RESEND = 'resend',
+    RESEND = 'RESEND',
     // Later add: AWS_SES = 'aws_ses', SMTP = 'smtp', etc
 }
   
@@ -47,5 +47,5 @@ export const createEmailService = (provider: EmailProvider): EmailService => {
         throw new Error(`Unsupported email provider: ${provider}`);
 
     }
-    
+
 };

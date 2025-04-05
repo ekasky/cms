@@ -1,5 +1,6 @@
-import { getEnv, getEnvAsEnum, getEnvAsInteger } from '../utils/env';
 import { StringValue } from 'ms';
+import { getEnv, getEnvAsEnum, getEnvAsInteger } from '../utils/env';
+import { EmailProvider } from '../utils/emailService';
 
 type NodeEnv = 'development' | 'production' | 'test';
 type EmailProvier = 'RESEND';
@@ -18,8 +19,9 @@ export const JWT_ACCESS_TOKEN_SECRET: string = getEnv('JWT_ACCESS_TOKEN_SECRET')
 export const JWT_REFRESH_TOKEN_SECRET: string = getEnv('JWT_REFRESH_TOKEN_SECRET');
 export const ACCESS_TOKEN_EXPIRES_IN: StringValue = getEnv('ACCESS_TOKEN_EXPIRES_IN') as StringValue;
 export const REFRESH_TOKEN_EXPIRES_IN: StringValue = getEnv('REFRESH_TOKEN_EXPIRES_IN') as StringValue;
-export const EMAIL_PROVIDER: EmailProvier = getEnvAsEnum('EMAIL_PROVIDER', ['RESEND']); 
+export const EMAIL_PROVIDER: EmailProvider = getEnvAsEnum('EMAIL_PROVIDER', ['RESEND']) as EmailProvider;
 export const RESEND_API_KEY: string = getEnv('RESEND_API_KEY');
+export const EMAIL_DOMAIN: string = getEnv('EMAIL_DOMAIN');
 
 export const env = { 
     NODE_ENV, 
@@ -41,7 +43,8 @@ export const env = {
     },
     EMAIL: {
         EMAIL_PROVIDER,
-        RESEND_API_KEY
+        RESEND_API_KEY,
+        EMAIL_DOMAIN
     }
 };
 
