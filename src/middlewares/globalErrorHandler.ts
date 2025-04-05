@@ -23,7 +23,8 @@ export const globalErrorHandler = (err: Error, req: Request, res: Response, next
 
         res.status(err.statusCode).json({
             success: false,
-            message: err.message
+            message: err.message,
+            details: err.details // Will be undefined unless provided
         });
 
     } 
