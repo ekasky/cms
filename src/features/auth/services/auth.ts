@@ -2,14 +2,7 @@ import argon2 from 'argon2';
 import { prisma } from '../../../config/prisma';
 import { ApiError, FieldConflictError } from '../../../utils/ApiError';
 import { AuthProvider } from '@prisma/client';
-
-interface RegisterDto {
-    username: string;
-    email: string;
-    password: string;
-    first_name: string;
-    last_name: string;
-}
+import { RegisterDto } from '../validators';
 
 export const registerUser = async (data: RegisterDto) => {
 

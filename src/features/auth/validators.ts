@@ -16,3 +16,5 @@ export const registerUserSchema = z.object({
     last_name: z.string().min(1, { message: 'Last name is required' }).max(75, { message: 'Last name must be at most 75 characters' })
 
 }).strict();
+
+export type RegisterDto = z.infer<typeof registerUserSchema>;
