@@ -70,7 +70,7 @@ export const registerUser = async (data: RegisterDto) => {
             verificationLink: 'https://yourdomain.com/verify-email?token=12345' // Placeholder will replace with real link
         }))
     } catch(error) {
-
+        throw new ApiError(400, 'There was a problem sending the verification email. Please try again shortly.');
     }
 
     // === 6. Return a success message if registered successfully ===
