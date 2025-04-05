@@ -5,6 +5,8 @@ import { AuthProvider } from '@prisma/client';
 import { RegisterDto } from '../validators';
 import { pwnedPassword } from 'hibp';
 import { sendAccountVerificationEmail } from './email';
+import { FRONTEND_URL } from '../../../config/config';
+import { generateVerificationToken } from './verification';
 
 export const registerUser = async (data: RegisterDto) => {
 
@@ -43,32 +45,52 @@ export const registerUser = async (data: RegisterDto) => {
 
     // === 4. Save the new user to the Users table in the database ===
 
-    let newUser;
+    const { newUser, verificationToken } = await prisma.$transaction(async (tx) => {
 
-    try {
+        let newUser;
+        let verificationToken;
 
-        newUser = await prisma.user.create({
-            data: {
-                username,
-                email,
-                password: hashedPassword,
-                first_name,
-                last_name,
-                provider: AuthProvider.LOCAL,
-                email_verification_status: 'PENDING'
-            }
-        });
+        // Save the user to the db
+        try {
 
-    } catch(error) {
-        throw new ApiError(500, 'Failed to create user. Please try again.');
-    }
+            newUser = await tx.user.create({
+                data: {
+                    username,
+                    email,
+                    password: hashedPassword,
+                    first_name,
+                    last_name,
+                    provider: AuthProvider.LOCAL,
+                    email_verification_status: 'PENDING'
+                }
+            });
+
+        } catch(error) {
+            throw new ApiError(500, 'Failed to create user. Try again.');
+        }
+
+        // Create and save the inital account verification token to the db
+        try {
+            
+            verificationToken = await generateVerificationToken(tx, newUser.id);
+
+        } catch(error) {
+            throw new ApiError(500, 'Failed to generate account verification token. Try again.');
+        }
+
+        return { newUser, verificationToken }
+
+    });
+
 
     // === 5. Send a inital acocunt verification email ===
+
+    const verificationLink: string = `${FRONTEND_URL}/verify-email?token=${verificationToken}`;
 
     try {
         await(sendAccountVerificationEmail({
             to: newUser.email,
-            verificationLink: 'https://yourdomain.com/verify-email?token=12345' // Placeholder will replace with real link
+            verificationLink: verificationLink
         }));
 
         // If successful, update the status to SENT

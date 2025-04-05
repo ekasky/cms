@@ -8,6 +8,8 @@ type EmailProvier = 'RESEND';
 // Safely parse the environment variables to their correct types and ensure they are loaded
 export const NODE_ENV: NodeEnv = getEnvAsEnum('NODE_ENV', ['development', 'production', 'test']);
 export const PORT: number = getEnvAsInteger('PORT');
+export const FRONTEND_URL: string = getEnv('FRONTEND_URL');
+export const BACKEND_URL: string = getEnv('BACKEND_URL');
 export const REDIS_HOST: string = getEnv('REDIS_HOST');
 export const REDIS_PORT: number = getEnvAsInteger('REDIS_PORT');
 export const DB_USER: string = getEnv('DB_USER');
@@ -26,6 +28,8 @@ export const EMAIL_DOMAIN: string = getEnv('EMAIL_DOMAIN');
 export const env = { 
     NODE_ENV, 
     PORT, 
+    FRONTEND_URL,
+    BACKEND_URL,
     REDIS_HOST, 
     REDIS_PORT,
     DB: {
